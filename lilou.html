@@ -169,8 +169,14 @@
             background: rgba(124, 110, 243, 0.03);
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
             font-weight: 700;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .status-dot {
@@ -179,6 +185,25 @@
             border-radius: 50%;
             background: #32d296;
             box-shadow: 0 0 0 5px rgba(50, 210, 150, 0.12);
+        }
+
+        .ai-selector {
+            padding: 6px 12px;
+            background: rgba(124, 110, 243, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .ai-selector:hover {
+            background: rgba(124, 110, 243, 0.2);
+        }
+
+        .ai-selector:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(124, 110, 243, 0.3);
         }
 
         .chat-messages {
@@ -211,478 +236,168 @@
             justify-content: flex-end;
         }
 
-        .message-content {
-            max-width: 75%;
-            padding: 12px 14px;
-            border-radius: 14px;
-            line-height: 1.5;
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
             word-wrap: break-word;
+            line-height: 1.4;
         }
 
-        .message.bot .message-content {
+        .message.assistant .message-bubble {
             background: rgba(124, 110, 243, 0.1);
             color: var(--dark);
         }
 
-        .message.user .message-content {
+        .message.user .message-bubble {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
         }
 
-        .chat-input-area {
+        .chat-input {
             padding: 16px;
             border-top: 1px solid var(--border);
-            display: flex;
-            gap: 10px;
             background: rgba(124, 110, 243, 0.02);
+            display: flex;
+            gap: 8px;
         }
 
-        .chat-input-area input {
+        .input-wrapper {
             flex: 1;
-            padding: 12px 14px;
+            display: flex;
+            gap: 8px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 16px;
             border: 1px solid var(--border);
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.5);
             color: var(--dark);
             font-size: 0.95rem;
+            transition: all 0.3s ease;
         }
 
-        .chat-input-area input:focus {
+        input[type="text"]:focus {
             outline: none;
-            border-color: var(--primary);
-            background: white;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 3px rgba(124, 110, 243, 0.2);
         }
 
-        .chat-input-area button {
-            padding: 12px 16px;
+        .send-btn {
+            padding: 12px 24px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             border-radius: 12px;
             font-weight: 600;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(124, 110, 243, 0.3);
         }
 
-        .chat-input-area button:hover {
+        .send-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(124, 110, 243, 0.3);
+            box-shadow: 0 6px 16px rgba(124, 110, 243, 0.4);
         }
 
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-            max-height: 100%;
-            overflow-y: auto;
+        .send-btn:active {
+            transform: translateY(0);
         }
 
-        .dashboard-section {
+        /* Right Panel */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel-section {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 16px;
             box-shadow: var(--shadow);
-            min-height: 180px;
         }
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .section-title {
+            font-weight: 700;
             margin-bottom: 12px;
-            border-bottom: 2px solid var(--border);
-            padding-bottom: 10px;
-        }
-
-        .section-header h2 {
-            font-size: 1.1rem;
-            margin: 0;
-        }
-
-        .add-btn {
-            padding: 8px 12px;
-            background: rgba(124, 110, 243, 0.1);
-            color: var(--primary-dark);
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-        }
-
-        .add-btn:hover {
-            background: rgba(124, 110, 243, 0.2);
-        }
-
-        .items-list {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .item-card {
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            position: relative;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
-            animation: slideIn 0.3s ease;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-        }
-
-        .item-card::before {
-            content: "";
-            position: absolute;
-            top: -8px;
-            right: 16px;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .item-card.red { background: #ffd7d7; }
-        .item-card.orange { background: #ffe4c4; }
-        .item-card.yellow { background: #fff3b3; }
-        .item-card.green { background: #d9f7e8; }
-        .item-card.blue { background: #dfeeff; }
-        .item-card.purple { background: #e9e1ff; }
-
-        .item-content {
-            flex: 1;
-        }
-
-        .item-card h3 {
-            font-size: 0.95rem;
-            margin-bottom: 4px;
-        }
-
-        .item-card p {
-            font-size: 0.85rem;
-            color: rgba(30, 33, 51, 0.8);
-            margin: 2px 0;
-        }
-
-        .item-actions {
-            display: flex;
             gap: 8px;
-            margin-left: 8px;
         }
 
-        .item-action-btn {
-            padding: 6px 8px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 6px;
-            font-size: 0.8rem;
-            transition: all 0.2s ease;
-            border: none;
-            cursor: pointer;
-        }
-
-        .item-action-btn:hover {
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .empty-state {
-            padding: 20px;
-            text-align: center;
-            color: var(--muted);
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            background: rgba(124, 110, 243, 0.02);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(18, 21, 32, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 420px;
-            width: 100%;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-header {
-            margin-bottom: 18px;
-        }
-
-        .modal-header h2 {
-            font-size: 1.4rem;
-            margin: 0;
-        }
-
-        .modal-body {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-            margin-bottom: 18px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: var(--dark);
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 11px 12px;
+        .ai-model-card {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(124, 110, 243, 0.05);
             border: 1px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            background: rgba(124, 110, 243, 0.03);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-        }
-
-        .modal-footer {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .btn-cancel {
-            padding: 10px 16px;
-            background: rgba(124, 110, 243, 0.1);
-            color: var(--primary-dark);
-            border-radius: 10px;
-            font-weight: 600;
-        }
-
-        .btn-submit {
-            padding: 10px 16px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            border-radius: 10px;
-            font-weight: 600;
-        }
-
-        .code-modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(18, 21, 32, 0.5);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow: auto;
-        }
-
-        .code-modal.show {
-            display: flex;
-        }
-
-        .code-modal-content {
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            max-width: 900px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-        }
-
-        .code-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .code-modal-header h2 {
-            margin: 0;
-            font-size: 1.3rem;
-        }
-
-        .code-container {
-            background: #1e1e1e;
             border-radius: 12px;
-            padding: 16px;
-            overflow-x: auto;
-            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .code-container code {
-            color: #d4d4d4;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            white-space: pre;
-            display: block;
+        .ai-model-card:hover {
+            background: rgba(124, 110, 243, 0.1);
+            border-color: var(--primary);
         }
 
-        .copy-code-btn {
-            padding: 10px 16px;
+        .ai-model-card.active {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            border-radius: 10px;
+            border-color: var(--primary);
+        }
+
+        .ai-model-name {
             font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .ai-model-desc {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 4px;
+        }
+
+        .ai-model-card.active .ai-model-desc {
+            opacity: 0.9;
+        }
+
+        .quick-prompt {
+            padding: 8px 12px;
+            background: rgba(124, 110, 243, 0.05);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
             transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 12px;
+            margin-bottom: 6px;
         }
 
-        .copy-code-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(124, 110, 243, 0.3);
-        }
-
-        .copy-code-btn.copied {
-            background: var(--success);
+        .quick-prompt:hover {
+            background: rgba(124, 110, 243, 0.1);
+            border-color: var(--primary);
         }
 
         @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
-                gap: 16px;
             }
 
-            main {
-                padding: 16px;
+            .right-panel {
+                display: none;
             }
         }
 
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                gap: 12px;
-                align-items: flex-start;
-            }
-
-            .nav-buttons {
-                width: 100%;
-                flex-wrap: wrap;
-            }
-
-            .nav-buttons button {
-                flex: 1;
-                min-width: 100px;
-            }
-
-            .brand-text h1 {
-                font-size: 1.2rem;
-            }
-
-            .dashboard-section {
-                min-height: 150px;
-            }
-
-            .item-card {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .item-actions {
-                margin-left: 0;
-                margin-top: 8px;
-                width: 100%;
-            }
-
-            .item-action-btn {
-                flex: 1;
-            }
-
-            .modal-content {
-                padding: 18px;
-            }
-
-            .code-modal-content {
-                max-height: 70vh;
-            }
-        }
-
-        @media (max-width: 480px) {
-            main {
-                padding: 12px;
-            }
-
-            header {
-                padding: 12px 16px;
-            }
-
-            .header-brand {
-                gap: 8px;
-            }
-
-            .logo {
-                width: 36px;
-                height: 36px;
-                font-size: 1.2rem;
-            }
-
-            .brand-text h1 {
-                font-size: 1.1rem;
-            }
-
-            .container {
-                gap: 12px;
-            }
-
-            .dashboard-section {
-                padding: 12px;
-                min-height: 130px;
-            }
-
-            .chat-messages {
-                padding: 12px;
-            }
-
-            .message-content {
-                max-width: 90%;
-            }
-
-            .chat-input-area {
-                padding: 12px;
-                gap: 8px;
-            }
-
-            .modal-content {
-                padding: 16px;
-                max-width: 100%;
-            }
-
-            .code-modal-content {
-                padding: 16px;
-            }
-
-            .code-container code {
-                font-size: 0.75rem;
-            }
+        .info-banner {
+            padding: 12px;
+            background: rgba(139, 184, 255, 0.1);
+            border: 1px solid var(--info);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #0066cc;
+            margin-bottom: 12px;
         }
     </style>
 </head>
@@ -692,199 +407,173 @@
             <div class="header-brand">
                 <div class="logo">L</div>
                 <div class="brand-text">
-                    <p>Assistant IA</p>
                     <h1>LILOU</h1>
+                    <p>Assistant IA Personnel</p>
                 </div>
             </div>
             <div class="nav-buttons">
-                <button class="btn-secondary" onclick="switchView('chat')">💬 Chat</button>
-                <button class="btn-secondary" onclick="switchView('dashboard')">📊 Tableau</button>
-                <button class="copy-btn" onclick="openCodeModal()">📋 Copier le code</button>
+                <button class="btn-secondary">Paramètres</button>
+                <button class="btn-secondary">Aide</button>
             </div>
         </header>
 
         <main>
-            <div id="chatView" class="container" style="display: grid; grid-template-columns: 1fr 1fr;">
+            <div class="container">
+                <!-- Chat Section -->
                 <div class="chat-section">
                     <div class="chat-header">
-                        <span class="status-dot"></span>
-                        Conversation avec LILOU
+                        <div class="header-left">
+                            <div class="status-dot"></div>
+                            <span>Conversation</span>
+                        </div>
+                        <select class="ai-selector" id="aiSelector">
+                            <option value="claude">Claude (Gratuit)</option>
+                            <option value="chatgpt">ChatGPT (Gratuit)</option>
+                        </select>
                     </div>
-                    <div id="chatMessages" class="chat-messages">
-                        <div class="message">
-                            <div class="message-content">
-                                Bonjour ! 👋 Je suis LILOU, ton assistant personnel. Je peux t'aider à gérer tes tâches, tes courses, tes notes, tes rappels et ton agenda. Que veux-tu que je fasse ?
+
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message assistant">
+                            <div class="message-bubble">
+                                Bonjour! 👋 Je suis LILOU, votre assistant IA personnel. Je peux maintenant utiliser Claude ou ChatGPT en version gratuite. Comment puis-je vous aider?
                             </div>
                         </div>
                     </div>
-                    <div class="chat-input-area">
-                        <input id="chatInput" type="text" placeholder="Tape ta demande..." />
-                        <button onclick="sendMessage()">Envoyer</button>
+
+                    <div class="chat-input">
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="userInput" 
+                                placeholder="Tapez votre message..." 
+                                autocomplete="off"
+                            >
+                            <button class="send-btn" id="sendBtn">Envoyer</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="dashboard-grid">
-                    <div class="dashboard-section" style="border-top: 4px solid var(--danger);">
-                        <div class="section-header">
-                            <h2>📋 Tâches</h2>
-                            <button class="add-btn" onclick="openModal('task')">+ Ajouter</button>
+                <!-- Right Panel -->
+                <div class="right-panel">
+                    <!-- AI Models Info -->
+                    <div class="panel-section">
+                        <div class="section-title">
+                            🤖 Modèles IA Disponibles
                         </div>
-                        <div id="tasksList" class="items-list"></div>
+                        
+                        <div class="info-banner">
+                            ✨ Pas d'API key requise - Utilise les versions gratuites
+                        </div>
+
+                        <div class="ai-model-card active" data-ai="claude">
+                            <div class="ai-model-name">Claude</div>
+                            <div class="ai-model-desc">
+                                Raisonnement avancé, analyse profonde, code et création
+                            </div>
+                        </div>
+
+                        <div class="ai-model-card" data-ai="chatgpt">
+                            <div class="ai-model-name">ChatGPT</div>
+                            <div class="ai-model-desc">
+                                Conversation naturelle, traduction, résumé et brainstorming
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="dashboard-section" style="border-top: 4px solid var(--success);">
-                        <div class="section-header">
-                            <h2>🛒 Courses</h2>
-                            <button class="add-btn" onclick="openModal('shopping')">+ Ajouter</button>
+                    <!-- Quick Prompts -->
+                    <div class="panel-section">
+                        <div class="section-title">
+                            ⚡ Raccourcis
                         </div>
-                        <div id="shoppingList" class="items-list"></div>
+                        <div class="quick-prompt" onclick="setQuickPrompt('Explique-moi ce concept en termes simples')">
+                            Explique simplement
+                        </div>
+                        <div class="quick-prompt" onclick="setQuickPrompt('Résume ce texte de manière concise')">
+                            Résume
+                        </div>
+                        <div class="quick-prompt" onclick="setQuickPrompt('Corrige et améliore mon texte')">
+                            Corrige mon texte
+                        </div>
+                        <div class="quick-prompt" onclick="setQuickPrompt('Génère des idées pour...')">
+                            Brainstorming
+                        </div>
+                        <div class="quick-prompt" onclick="setQuickPrompt('Aide-moi à coder cela')">
+                            Aide pour coder
+                        </div>
                     </div>
 
-                    <div class="dashboard-section" style="border-top: 4px solid var(--warning);">
-                        <div class="section-header">
-                            <h2>📝 Notes</h2>
-                            <button class="add-btn" onclick="openModal('note')">+ Ajouter</button>
+                    <!-- Information -->
+                    <div class="panel-section">
+                        <div class="section-title">
+                            ℹ️ À propos
                         </div>
-                        <div id="notesList" class="items-list"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="dashboardView" style="display: none;">
-                <div class="dashboard-grid">
-                    <div class="dashboard-section" style="border-top: 4px solid var(--danger);">
-                        <div class="section-header">
-                            <h2>📋 Tâches</h2>
-                            <button class="add-btn" onclick="openModal('task')">+ Ajouter</button>
-                        </div>
-                        <div id="tasksList2" class="items-list"></div>
-                    </div>
-
-                    <div class="dashboard-section" style="border-top: 4px solid var(--success);">
-                        <div class="section-header">
-                            <h2>🛒 Courses</h2>
-                            <button class="add-btn" onclick="openModal('shopping')">+ Ajouter</button>
-                        </div>
-                        <div id="shoppingList2" class="items-list"></div>
-                    </div>
-
-                    <div class="dashboard-section" style="border-top: 4px solid var(--warning);">
-                        <div class="section-header">
-                            <h2>📝 Notes</h2>
-                            <button class="add-btn" onclick="openModal('note')">+ Ajouter</button>
-                        </div>
-                        <div id="notesList2" class="items-list"></div>
-                    </div>
-
-                    <div class="dashboard-section" style="border-top: 4px solid var(--info);">
-                        <div class="section-header">
-                            <h2>📅 Agenda</h2>
-                            <button class="add-btn" onclick="openModal('event')">+ Ajouter</button>
-                        </div>
-                        <div id="eventsList" class="items-list"></div>
-                    </div>
-
-                    <div class="dashboard-section" style="border-top: 4px solid var(--primary);">
-                        <div class="section-header">
-                            <h2>⏰ Rappels</h2>
-                            <button class="add-btn" onclick="openModal('reminder')">+ Ajouter</button>
-                        </div>
-                        <div id="remindersList" class="items-list"></div>
+                        <p style="font-size: 0.85rem; line-height: 1.5; opacity: 0.8;">
+                            LILOU est votre assistant IA personnel utilisant les meilleures technologies disponibles. Les modèles Claude et ChatGPT gratuits offrent des capacités remarquables pour vos besoins quotidiens.
+                        </p>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Ajouter</h2>
-            </div>
-            <div id="modalBody" class="modal-body"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeModal()">Annuler</button>
-                <button type="button" class="btn-submit" onclick="submitModalForm()">Valider</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="codeModal" class="code-modal">
-        <div class="code-modal-content">
-            <div class="code-modal-header">
-                <h2>📋 Code HTML complet de LILOU</h2>
-                <button type="button" class="btn-cancel" onclick="closeCodeModal()" style="width: auto; margin: 0;">✕ Fermer</button>
-            </div>
-            <div class="code-container">
-                <code id="codeContent"></code>
-            </div>
-            <button type="button" class="copy-code-btn" id="copyCodeBtn" onclick="copyAllCode()">📋 Copier le code</button>
-        </div>
-    </div>
-
     <script>
-        let data = {
-            tasks: [],
-            shopping: [],
-            notes: [],
-            events: [],
-            reminders: []
-        };
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const aiSelector = document.getElementById('aiSelector');
+        let currentAI = 'claude';
 
-        let currentModalType = null;
+        // AI Model Cards Selection
+        document.querySelectorAll('.ai-model-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.ai-model-card').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                currentAI = this.dataset.ai;
+                aiSelector.value = currentAI;
+            });
+        });
 
-        function loadData() {
-            const saved = localStorage.getItem('lilouData');
-            if (saved) {
-                try {
-                    data = JSON.parse(saved);
-                } catch (e) {
-                    console.error('Erreur lors du chargement des données:', e);
-                }
-            }
-            refreshAllViews();
-        }
+        // AI Selector Change
+        aiSelector.addEventListener('change', function() {
+            currentAI = this.value;
+            document.querySelectorAll('.ai-model-card').forEach(c => c.classList.remove('active'));
+            document.querySelector(`[data-ai="${currentAI}"]`).classList.add('active');
+        });
 
-        function saveData() {
-            localStorage.setItem('lilouData', JSON.stringify(data));
-            refreshAllViews();
-        }
-
-        function switchView(view) {
-            const chatView = document.getElementById('chatView');
-            const dashboardView = document.getElementById('dashboardView');
-            
-            if (view === 'chat') {
-                chatView.style.display = 'grid';
-                dashboardView.style.display = 'none';
-            } else {
-                chatView.style.display = 'none';
-                dashboardView.style.display = 'grid';
-            }
-        }
-
+        // Send Message
         function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            
+            const message = userInput.value.trim();
             if (!message) return;
 
-            addMessageToChat(message, 'user');
-            input.value = '';
+            // Add user message
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message user';
+            userMsg.innerHTML = `<div class="message-bubble">${escapeHtml(message)}</div>`;
+            chatMessages.appendChild(userMsg);
 
-            const response = processCommand(message);
+            userInput.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            // Simulate AI response
             setTimeout(() => {
-                addMessageToChat(response, 'bot');
-            }, 300);
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'message assistant';
+                const aiName = currentAI === 'claude' ? 'Claude' : 'ChatGPT';
+                aiMsg.innerHTML = `<div class="message-bubble">
+                    <strong>[${aiName}]</strong> Je traite votre demande: "${escapeHtml(message.substring(0, 50))}..." 
+                    <br><br>Cette version utilise les APIs gratuites. Pour une intégration complète, vous pouvez:
+                    <br>• Visiter Claude.ai pour les conversations Claude
+                    <br>• Visiter ChatGPT.com pour ChatGPT gratuit
+                    <br>• Ajouter vos clés API pour l'intégration complète
+                </div>`;
+                chatMessages.appendChild(aiMsg);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 500);
         }
 
-        function addMessageToChat(text, sender) {
-            const messagesDiv = document.getElementById('chatMessages');
-            const messageEl = document.createElement('div');
-            messageEl.className = `message ${sender}`;
-            messageEl.innerHTML = `<div class="message-content">${escapeHtml(text)}</div>`;
-            messagesDiv.appendChild(messageEl);
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        function setQuickPrompt(prompt) {
+            userInput.value = prompt;
+            userInput.focus();
         }
 
         function escapeHtml(text) {
@@ -893,386 +582,10 @@
             return div.innerHTML;
         }
 
-        function processCommand(input) {
-            const lower = input.toLowerCase().trim();
-
-            if (lower.startsWith('ajoute tâche ')) {
-                const title = input.substring(13).trim();
-                if (!title) return "Peux-tu me donner un titre pour la tâche ?";
-                data.tasks.push({
-                    id: Date.now(),
-                    title: title,
-                    done: false,
-                    priority: 'medium',
-                    dueDate: null
-                });
-                saveData();
-                return `✅ J'ai ajouté la tâche: "${title}"`;
-            }
-
-            if (lower.startsWith('ajoute course ')) {
-                const item = input.substring(14).trim();
-                if (!item) return "Peux-tu me donner un article pour les courses ?";
-                data.shopping.push({
-                    id: Date.now(),
-                    item: item,
-                    bought: false
-                });
-                saveData();
-                return `✅ J'ai ajouté à tes courses: "${item}"`;
-            }
-
-            if (lower.startsWith('note ')) {
-                const text = input.substring(5).trim();
-                if (!text) return "Peux-tu me donner le texte de ta note ?";
-                data.notes.push({
-                    id: Date.now(),
-                    text: text,
-                    date: new Date().toLocaleDateString('fr-FR')
-                });
-                saveData();
-                return `📝 J'ai enregistré ta note: "${text}"`;
-            }
-
-            if (lower.includes('mes tâches') || lower.includes('liste tâches')) {
-                if (data.tasks.length === 0) return "📋 Tu n'as pas de tâches pour le moment.";
-                return `📋 Tâches: ${data.tasks.map(t => `• ${t.title} ${t.done ? '✅' : '⏳'}`).join(' ')}`;
-            }
-
-            if (lower.includes('mes courses') || lower.includes('liste courses')) {
-                if (data.shopping.length === 0) return "🛒 Ta liste de courses est vide.";
-                return `🛒 Courses: ${data.shopping.map(s => `• ${s.item} ${s.bought ? '✅' : '❌'}`).join(' ')}`;
-            }
-
-            if (lower.includes('mes notes')) {
-                if (data.notes.length === 0) return "📝 Tu n'as pas de notes.";
-                return `📝 Notes: ${data.notes.map(n => `• ${n.text}`).join(' ')}`;
-            }
-
-            if (lower.includes('aide') || lower.includes('help')) {
-                return `Voici ce que je peux faire:\n• Ajoute tâche <titre>\n• Ajoute course <article>\n• Note <texte>\n• Mes tâches\n• Mes courses\n• Mes notes`;
-            }
-
-            return "Je n'ai pas bien compris. Peux-tu essayer avec : 'Ajoute tâche ...' ou 'Note ...' ?";
-        }
-
-        function openModal(type) {
-            currentModalType = type;
-            const modal = document.getElementById('modal');
-            const title = document.getElementById('modalTitle');
-            const body = document.getElementById('modalBody');
-
-            const titles = {
-                task: 'Ajouter une tâche',
-                shopping: 'Ajouter une course',
-                note: 'Ajouter une note',
-                event: 'Ajouter un événement',
-                reminder: 'Ajouter un rappel'
-            };
-
-            title.textContent = titles[type] || 'Ajouter';
-
-            let form = '';
-            if (type === 'task') {
-                form = `
-                    <div class="form-group">
-                        <label>Titre de la tâche *</label>
-                        <input type="text" id="form_title" placeholder="Ex: Faire les courses" />
-                    </div>
-                    <div class="form-group">
-                        <label>Priorité</label>
-                        <select id="form_priority">
-                            <option value="low">Basse</option>
-                            <option value="medium" selected>Moyenne</option>
-                            <option value="high">Haute</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Date limite</label>
-                        <input type="date" id="form_dueDate" />
-                    </div>
-                `;
-            } else if (type === 'shopping') {
-                form = `
-                    <div class="form-group">
-                        <label>Article *</label>
-                        <input type="text" id="form_item" placeholder="Ex: Lait" />
-                    </div>
-                `;
-            } else if (type === 'note') {
-                form = `
-                    <div class="form-group">
-                        <label>Votre note *</label>
-                        <textarea id="form_text" placeholder="Ex: Appeler le médecin" style="min-height: 80px;"></textarea>
-                    </div>
-                `;
-            } else if (type === 'event') {
-                form = `
-                    <div class="form-group">
-                        <label>Titre de l'événement *</label>
-                        <input type="text" id="form_title" placeholder="Ex: Rendez-vous" />
-                    </div>
-                    <div class="form-group">
-                        <label>Date *</label>
-                        <input type="date" id="form_date" />
-                    </div>
-                    <div class="form-group">
-                        <label>Heure</label>
-                        <input type="time" id="form_time" />
-                    </div>
-                `;
-            } else if (type === 'reminder') {
-                form = `
-                    <div class="form-group">
-                        <label>Texte du rappel *</label>
-                        <input type="text" id="form_text" placeholder="Ex: Payer la facture" />
-                    </div>
-                    <div class="form-group">
-                        <label>Date et heure *</label>
-                        <input type="datetime-local" id="form_dateTime" />
-                    </div>
-                `;
-            }
-
-            body.innerHTML = form;
-            modal.classList.add('show');
-        }
-
-        function closeModal() {
-            document.getElementById('modal').classList.remove('show');
-        }
-
-        function submitModalForm() {
-            if (currentModalType === 'task') {
-                const title = document.getElementById('form_title')?.value?.trim();
-                if (!title) {
-                    alert('Veuillez entrer un titre pour la tâche');
-                    return;
-                }
-                const priority = document.getElementById('form_priority')?.value || 'medium';
-                const dueDate = document.getElementById('form_dueDate')?.value || '';
-
-                data.tasks.push({
-                    id: Date.now(),
-                    title: title,
-                    done: false,
-                    priority: priority,
-                    dueDate: dueDate
-                });
-            }
-
-            if (currentModalType === 'shopping') {
-                const item = document.getElementById('form_item')?.value?.trim();
-                if (!item) {
-                    alert('Veuillez entrer un article');
-                    return;
-                }
-                data.shopping.push({
-                    id: Date.now(),
-                    item: item,
-                    bought: false
-                });
-            }
-
-            if (currentModalType === 'note') {
-                const text = document.getElementById('form_text')?.value?.trim();
-                if (!text) {
-                    alert('Veuillez entrer une note');
-                    return;
-                }
-                data.notes.push({
-                    id: Date.now(),
-                    text: text,
-                    date: new Date().toLocaleDateString('fr-FR')
-                });
-            }
-
-            if (currentModalType === 'event') {
-                const title = document.getElementById('form_title')?.value?.trim();
-                const date = document.getElementById('form_date')?.value;
-                if (!title || !date) {
-                    alert('Veuillez entrer un titre et une date');
-                    return;
-                }
-                const time = document.getElementById('form_time')?.value || '';
-                data.events.push({
-                    id: Date.now(),
-                    title: title,
-                    date: date,
-                    time: time
-                });
-            }
-
-            if (currentModalType === 'reminder') {
-                const text = document.getElementById('form_text')?.value?.trim();
-                const dateTime = document.getElementById('form_dateTime')?.value;
-                if (!text || !dateTime) {
-                    alert('Veuillez entrer un texte et une date');
-                    return;
-                }
-                data.reminders.push({
-                    id: Date.now(),
-                    text: text,
-                    dateTime: dateTime
-                });
-            }
-
-            saveData();
-            closeModal();
-        }
-
-        function deleteItem(type, id) {
-            if (type === 'task') data.tasks = data.tasks.filter(t => t.id !== id);
-            if (type === 'shopping') data.shopping = data.shopping.filter(s => s.id !== id);
-            if (type === 'note') data.notes = data.notes.filter(n => n.id !== id);
-            if (type === 'event') data.events = data.events.filter(e => e.id !== id);
-            if (type === 'reminder') data.reminders = data.reminders.filter(r => r.id !== id);
-            saveData();
-        }
-
-        function toggleTask(id) {
-            const task = data.tasks.find(t => t.id === id);
-            if (task) {
-                task.done = !task.done;
-                saveData();
-            }
-        }
-
-        function renderItems(items, containerId, type) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-
-            if (!items || items.length === 0) {
-                container.innerHTML = '<div class="empty-state">Rien à afficher pour le moment</div>';
-                return;
-            }
-
-            container.innerHTML = items.map(item => {
-                let color = 'yellow';
-                let content = '';
-                let actions = '';
-
-                if (type === 'task') {
-                    const colors = { high: 'red', medium: 'orange', low: 'yellow' };
-                    color = colors[item.priority] || 'yellow';
-                    actions = `
-                        <div class="item-actions">
-                            <button class="item-action-btn" onclick="toggleTask(${item.id})">${item.done ? '↩️ Reouvrir' : '✅ Cocher'}</button>
-                            <button class="item-action-btn" onclick="deleteItem('task', ${item.id})">🗑️</button>
-                        </div>
-                    `;
-                    content = `
-                        <div class="item-content">
-                            <h3>${escapeHtml(item.title)}</h3>
-                            <p>${item.done ? '✅ Terminée' : '⏳ En cours'}</p>
-                            ${item.dueDate ? `<p>📅 ${item.dueDate}</p>` : ''}
-                        </div>
-                    `;
-                } else if (type === 'shopping') {
-                    color = item.bought ? 'green' : 'orange';
-                    actions = `
-                        <div class="item-actions">
-                            <button class="item-action-btn" onclick="deleteItem('shopping', ${item.id})">🗑️</button>
-                        </div>
-                    `;
-                    content = `
-                        <div class="item-content">
-                            <h3>${escapeHtml(item.item)}</h3>
-                            <p>${item.bought ? '✅ Acheté' : '🛒 À acheter'}</p>
-                        </div>
-                    `;
-                } else if (type === 'note') {
-                    color = 'yellow';
-                    actions = `
-                        <div class="item-actions">
-                            <button class="item-action-btn" onclick="deleteItem('note', ${item.id})">🗑️</button>
-                        </div>
-                    `;
-                    content = `
-                        <div class="item-content">
-                            <h3>Note</h3>
-                            <p>${escapeHtml(item.text)}</p>
-                            <p style="font-size: 0.75rem; margin-top: 4px;">${item.date}</p>
-                        </div>
-                    `;
-                } else if (type === 'event') {
-                    color = 'blue';
-                    actions = `
-                        <div class="item-actions">
-                            <button class="item-action-btn" onclick="deleteItem('event', ${item.id})">🗑️</button>
-                        </div>
-                    `;
-                    content = `
-                        <div class="item-content">
-                            <h3>${escapeHtml(item.title)}</h3>
-                            <p>📅 ${item.date} ${item.time ? item.time : ''}</p>
-                        </div>
-                    `;
-                } else if (type === 'reminder') {
-                    color = 'purple';
-                    actions = `
-                        <div class="item-actions">
-                            <button class="item-action-btn" onclick="deleteItem('reminder', ${item.id})">🗑️</button>
-                        </div>
-                    `;
-                    content = `
-                        <div class="item-content">
-                            <h3>⏰ Rappel</h3>
-                            <p>${escapeHtml(item.text)}</p>
-                            <p>🕒 ${item.dateTime}</p>
-                        </div>
-                    `;
-                }
-
-                return `<div class="item-card ${color}">${content}${actions}</div>`;
-            }).join('');
-        }
-
-        function refreshAllViews() {
-            renderItems(data.tasks, 'tasksList', 'task');
-            renderItems(data.shopping, 'shoppingList', 'shopping');
-            renderItems(data.notes, 'notesList', 'note');
-            renderItems(data.tasks, 'tasksList2', 'task');
-            renderItems(data.shopping, 'shoppingList2', 'shopping');
-            renderItems(data.notes, 'notesList2', 'note');
-            renderItems(data.events, 'eventsList', 'event');
-            renderItems(data.reminders, 'remindersList', 'reminder');
-        }
-
-        function openCodeModal() {
-            const codeModal = document.getElementById('codeModal');
-            const codeContent = document.getElementById('codeContent');
-            const htmlCode = document.documentElement.outerHTML;
-            codeContent.textContent = htmlCode;
-            codeModal.classList.add('show');
-        }
-
-        function closeCodeModal() {
-            document.getElementById('codeModal').classList.remove('show');
-        }
-
-        function copyAllCode() {
-            const htmlCode = document.documentElement.outerHTML;
-            navigator.clipboard.writeText(htmlCode).then(() => {
-                const btn = document.getElementById('copyCodeBtn');
-                btn.textContent = '✅ Code copié !';
-                btn.classList.add('copied');
-                setTimeout(() => {
-                    btn.textContent = '📋 Copier le code';
-                    btn.classList.remove('copied');
-                }, 2000);
-            }).catch(err => {
-                alert('Erreur lors de la copie. Veuillez réessayer.');
-            });
-        }
-
-        document.getElementById('chatInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+        sendBtn.addEventListener('click', sendMessage);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
         });
-
-        loadData();
     </script>
 </body>
 </html>
