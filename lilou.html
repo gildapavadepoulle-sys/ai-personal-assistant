@@ -30,7 +30,7 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #f3f5ff 0%, #eef9ff 100%);
             color: var(--dark);
-            height: 100%;
+            min-height: 100vh;
         }
 
         body {
@@ -44,7 +44,6 @@
             flex-direction: column;
         }
 
-        /* Header */
         header {
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(12px);
@@ -97,28 +96,18 @@
             gap: 10px;
         }
 
-        nav button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 10px;
+        button {
+            font: inherit;
             cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 8px 16px rgba(124, 110, 243, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(124, 110, 243, 0.4);
+            border: none;
         }
 
         .btn-secondary {
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
             background: rgba(124, 110, 243, 0.1);
             color: var(--primary-dark);
         }
@@ -127,7 +116,6 @@
             background: rgba(124, 110, 243, 0.15);
         }
 
-        /* Main Content */
         main {
             flex: 1;
             padding: 20px;
@@ -144,7 +132,6 @@
             height: 100%;
         }
 
-        /* Chat Panel */
         .chat-section {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(12px);
@@ -250,9 +237,7 @@
             padding: 12px 16px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            border: none;
             border-radius: 12px;
-            cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
         }
@@ -262,7 +247,6 @@
             box-shadow: 0 8px 16px rgba(124, 110, 243, 0.3);
         }
 
-        /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -299,9 +283,7 @@
             padding: 8px 12px;
             background: rgba(124, 110, 243, 0.1);
             color: var(--primary-dark);
-            border: none;
             border-radius: 8px;
-            cursor: pointer;
             font-weight: 600;
             font-size: 0.85rem;
             transition: all 0.3s ease;
@@ -366,7 +348,6 @@
             background: rgba(124, 110, 243, 0.02);
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -448,9 +429,7 @@
             padding: 10px 16px;
             background: rgba(124, 110, 243, 0.1);
             color: var(--primary-dark);
-            border: none;
             border-radius: 10px;
-            cursor: pointer;
             font-weight: 600;
         }
 
@@ -458,13 +437,10 @@
             padding: 10px 16px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
-            border: none;
             border-radius: 10px;
-            cursor: pointer;
             font-weight: 600;
         }
 
-        /* Responsive */
         @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
@@ -590,7 +566,7 @@
                     <div id="chatMessages" class="chat-messages">
                         <div class="message">
                             <div class="message-content">
-                                Bonjour ! 👋 Je suis LILOU, ton assistant personnel. Je peux t'aider à gérer tes tâches, tes courses, tes notes, tes rappels et ton agenda. Que veux-tu que je fasse pour toi ?
+                                Bonjour ! 👋 Je suis LILOU, ton assistant personnel. Je peux t'aider à gérer tes tâches, tes courses, tes notes, tes rappels et ton agenda. Que veux-tu que je fasse ?
                             </div>
                         </div>
                     </div>
@@ -678,13 +654,11 @@
             <div class="modal-header">
                 <h2 id="modalTitle">Ajouter</h2>
             </div>
-            <form id="modalForm" onsubmit="submitForm(event)">
-                <div id="modalBody" class="modal-body"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="closeModal()">Annuler</button>
-                    <button type="submit" class="btn-submit">Valider</button>
-                </div>
-            </form>
+            <div id="modalBody" class="modal-body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Annuler</button>
+                <button type="button" class="btn-submit" onclick="submitModalForm()">Valider</button>
+            </div>
         </div>
     </div>
 
@@ -698,16 +672,20 @@
         };
 
         let currentModalType = null;
+        let formInputs = {};
 
-        // Load data from localStorage
         function loadData() {
             const saved = localStorage.getItem('lilouData');
             if (saved) {
-                data = JSON.parse(saved);
+                try {
+                    data = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Erreur lors du chargement des données:', e);
+                }
             }
+            refreshAllViews();
         }
 
-        // Save data to localStorage
         function saveData() {
             localStorage.setItem('lilouData', JSON.stringify(data));
             refreshAllViews();
@@ -723,7 +701,6 @@
             } else {
                 chatView.style.display = 'none';
                 dashboardView.style.display = 'grid';
-                refreshDashboard();
             }
         }
 
@@ -733,11 +710,9 @@
             
             if (!message) return;
 
-            // Add user message
             addMessageToChat(message, 'user');
             input.value = '';
 
-            // Process command
             const response = processCommand(message);
             setTimeout(() => {
                 addMessageToChat(response, 'bot');
@@ -760,10 +735,11 @@
         }
 
         function processCommand(input) {
-            const lower = input.toLowerCase();
+            const lower = input.toLowerCase().trim();
 
             if (lower.startsWith('ajoute tâche ')) {
-                const title = input.substring(13);
+                const title = input.substring(13).trim();
+                if (!title) return "Peux-tu me donner un titre pour la tâche ?";
                 data.tasks.push({
                     id: Date.now(),
                     title: title,
@@ -776,7 +752,8 @@
             }
 
             if (lower.startsWith('ajoute course ')) {
-                const item = input.substring(14);
+                const item = input.substring(14).trim();
+                if (!item) return "Peux-tu me donner un article pour les courses ?";
                 data.shopping.push({
                     id: Date.now(),
                     item: item,
@@ -787,7 +764,8 @@
             }
 
             if (lower.startsWith('note ')) {
-                const text = input.substring(5);
+                const text = input.substring(5).trim();
+                if (!text) return "Peux-tu me donner le texte de ta note ?";
                 data.notes.push({
                     id: Date.now(),
                     text: text,
@@ -813,20 +791,15 @@
             }
 
             if (lower.includes('aide') || lower.includes('help')) {
-                return `Voici ce que je peux faire:
-• "Ajoute tâche <titre>"
-• "Ajoute course <article>"
-• "Note <texte>"
-• "Mes tâches"
-• "Mes courses"
-• "Mes notes"`;
+                return `Voici ce que je peux faire:\n• Ajoute tâche <titre>\n• Ajoute course <article>\n• Note <texte>\n• Mes tâches\n• Mes courses\n• Mes notes`;
             }
 
-            return "Je n'ai pas bien compris. Peux-tu essayer avec une formulation comme 'Ajoute tâche ...' ou 'Note ...' ?";
+            return "Je n'ai pas bien compris. Peux-tu essayer avec : 'Ajoute tâche ...' ou 'Note ...' ?";
         }
 
         function openModal(type) {
             currentModalType = type;
+            formInputs = {};
             const modal = document.getElementById('modal');
             const title = document.getElementById('modalTitle');
             const body = document.getElementById('modalBody');
@@ -839,18 +812,18 @@
                 reminder: 'Ajouter un rappel'
             };
 
-            title.textContent = titles[type];
+            title.textContent = titles[type] || 'Ajouter';
 
             let form = '';
             if (type === 'task') {
                 form = `
                     <div class="form-group">
-                        <label>Titre *</label>
-                        <input type="text" name="title" placeholder="Ex: Faire les courses" required>
+                        <label>Titre de la tâche *</label>
+                        <input type="text" id="form_title" placeholder="Ex: Faire les courses" />
                     </div>
                     <div class="form-group">
                         <label>Priorité</label>
-                        <select name="priority">
+                        <select id="form_priority">
                             <option value="low">Basse</option>
                             <option value="medium" selected>Moyenne</option>
                             <option value="high">Haute</option>
@@ -858,47 +831,47 @@
                     </div>
                     <div class="form-group">
                         <label>Date limite</label>
-                        <input type="date" name="dueDate">
+                        <input type="date" id="form_dueDate" />
                     </div>
                 `;
             } else if (type === 'shopping') {
                 form = `
                     <div class="form-group">
                         <label>Article *</label>
-                        <input type="text" name="item" placeholder="Ex: Lait" required>
+                        <input type="text" id="form_item" placeholder="Ex: Lait" />
                     </div>
                 `;
             } else if (type === 'note') {
                 form = `
                     <div class="form-group">
-                        <label>Note *</label>
-                        <textarea name="text" placeholder="Ex: Appeler le médecin" required></textarea>
+                        <label>Votre note *</label>
+                        <textarea id="form_text" placeholder="Ex: Appeler le médecin" style="min-height: 80px;"></textarea>
                     </div>
                 `;
             } else if (type === 'event') {
                 form = `
                     <div class="form-group">
-                        <label>Titre *</label>
-                        <input type="text" name="title" placeholder="Ex: Rendez-vous" required>
+                        <label>Titre de l'événement *</label>
+                        <input type="text" id="form_title" placeholder="Ex: Rendez-vous" />
                     </div>
                     <div class="form-group">
                         <label>Date *</label>
-                        <input type="date" name="date" required>
+                        <input type="date" id="form_date" />
                     </div>
                     <div class="form-group">
                         <label>Heure</label>
-                        <input type="time" name="time">
+                        <input type="time" id="form_time" />
                     </div>
                 `;
             } else if (type === 'reminder') {
                 form = `
                     <div class="form-group">
                         <label>Texte du rappel *</label>
-                        <input type="text" name="text" placeholder="Ex: Payer facture" required>
+                        <input type="text" id="form_text" placeholder="Ex: Payer la facture" />
                     </div>
                     <div class="form-group">
                         <label>Date et heure *</label>
-                        <input type="datetime-local" name="dateTime" required>
+                        <input type="datetime-local" id="form_dateTime" />
                     </div>
                 `;
             }
@@ -911,56 +884,90 @@
             document.getElementById('modal').classList.remove('show');
         }
 
-        function submitForm(event) {
-            event.preventDefault();
-            const form = document.getElementById('modalForm');
-            const formData = new FormData(form);
-
+        function submitModalForm() {
             if (currentModalType === 'task') {
+                const title = document.getElementById('form_title')?.value?.trim();
+                if (!title) {
+                    alert('Veuillez entrer un titre pour la tâche');
+                    return;
+                }
+                const priority = document.getElementById('form_priority')?.value || 'medium';
+                const dueDate = document.getElementById('form_dueDate')?.value || '';
+
                 data.tasks.push({
                     id: Date.now(),
-                    title: formData.get('title'),
+                    title: title,
                     done: false,
-                    priority: formData.get('priority'),
-                    dueDate: formData.get('dueDate')
+                    priority: priority,
+                    dueDate: dueDate
                 });
-            } else if (currentModalType === 'shopping') {
+            }
+
+            if (currentModalType === 'shopping') {
+                const item = document.getElementById('form_item')?.value?.trim();
+                if (!item) {
+                    alert('Veuillez entrer un article');
+                    return;
+                }
                 data.shopping.push({
                     id: Date.now(),
-                    item: formData.get('item'),
+                    item: item,
                     bought: false
                 });
-            } else if (currentModalType === 'note') {
+            }
+
+            if (currentModalType === 'note') {
+                const text = document.getElementById('form_text')?.value?.trim();
+                if (!text) {
+                    alert('Veuillez entrer une note');
+                    return;
+                }
                 data.notes.push({
                     id: Date.now(),
-                    text: formData.get('text'),
+                    text: text,
                     date: new Date().toLocaleDateString('fr-FR')
                 });
-            } else if (currentModalType === 'event') {
+            }
+
+            if (currentModalType === 'event') {
+                const title = document.getElementById('form_title')?.value?.trim();
+                const date = document.getElementById('form_date')?.value;
+                if (!title || !date) {
+                    alert('Veuillez entrer un titre et une date');
+                    return;
+                }
+                const time = document.getElementById('form_time')?.value || '';
                 data.events.push({
                     id: Date.now(),
-                    title: formData.get('title'),
-                    date: formData.get('date'),
-                    time: formData.get('time')
+                    title: title,
+                    date: date,
+                    time: time
                 });
-            } else if (currentModalType === 'reminder') {
+            }
+
+            if (currentModalType === 'reminder') {
+                const text = document.getElementById('form_text')?.value?.trim();
+                const dateTime = document.getElementById('form_dateTime')?.value;
+                if (!text || !dateTime) {
+                    alert('Veuillez entrer un texte et une date');
+                    return;
+                }
                 data.reminders.push({
                     id: Date.now(),
-                    text: formData.get('text'),
-                    dateTime: formData.get('dateTime')
+                    text: text,
+                    dateTime: dateTime
                 });
             }
 
             saveData();
             closeModal();
-            form.reset();
         }
 
         function renderItems(items, containerId, type) {
             const container = document.getElementById(containerId);
             if (!container) return;
 
-            if (items.length === 0) {
+            if (!items || items.length === 0) {
                 container.innerHTML = '<div class="empty-state">Rien à afficher pour le moment</div>';
                 return;
             }
@@ -973,35 +980,35 @@
                     const colors = { high: 'red', medium: 'orange', low: 'yellow' };
                     color = colors[item.priority] || 'yellow';
                     content = `
-                        <h3>${item.title}</h3>
+                        <h3>${escapeHtml(item.title)}</h3>
                         <p>${item.done ? '✅ Terminée' : '⏳ En cours'}</p>
                         ${item.dueDate ? `<p>📅 ${item.dueDate}</p>` : ''}
                     `;
                 } else if (type === 'shopping') {
                     color = item.bought ? 'green' : 'orange';
                     content = `
-                        <h3>${item.item}</h3>
+                        <h3>${escapeHtml(item.item)}</h3>
                         <p>${item.bought ? '✅ Acheté' : '🛒 À acheter'}</p>
                     `;
                 } else if (type === 'note') {
                     color = 'yellow';
                     content = `
                         <h3>Note</h3>
-                        <p>${item.text}</p>
+                        <p>${escapeHtml(item.text)}</p>
                         <p style="font-size: 0.75rem; margin-top: 4px;">${item.date}</p>
                     `;
                 } else if (type === 'event') {
                     color = 'blue';
                     content = `
-                        <h3>${item.title}</h3>
+                        <h3>${escapeHtml(item.title)}</h3>
                         <p>📅 ${item.date} ${item.time ? item.time : ''}</p>
                     `;
                 } else if (type === 'reminder') {
                     color = 'purple';
                     content = `
                         <h3>⏰ Rappel</h3>
-                        <p>${item.text}</p>
-                        <p style="font-size: 0.75rem;">${item.dateTime}</p>
+                        <p>${escapeHtml(item.text)}</p>
+                        <p>🕒 ${item.dateTime}</p>
                     `;
                 }
 
@@ -1020,21 +1027,14 @@
             renderItems(data.reminders, 'remindersList', 'reminder');
         }
 
-        function refreshDashboard() {
-            renderItems(data.tasks, 'tasksList2', 'task');
-            renderItems(data.shopping, 'shoppingList2', 'shopping');
-            renderItems(data.notes, 'notesList2', 'note');
-            renderItems(data.events, 'eventsList', 'event');
-            renderItems(data.reminders, 'remindersList', 'reminder');
-        }
-
-        // Initialize
         document.getElementById('chatInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') sendMessage();
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
         });
 
+        // Initialize
         loadData();
-        refreshAllViews();
     </script>
 </body>
 </html>
