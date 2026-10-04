@@ -94,6 +94,7 @@
         .nav-buttons {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
         button {
@@ -114,6 +115,25 @@
 
         .btn-secondary:hover {
             background: rgba(124, 110, 243, 0.15);
+        }
+
+        .copy-btn {
+            padding: 10px 12px;
+            background: rgba(124, 110, 243, 0.1);
+            color: var(--primary-dark);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(124, 110, 243, 0.2);
+        }
+
+        .copy-btn.copied {
+            background: var(--success);
+            color: white;
         }
 
         main {
@@ -308,6 +328,9 @@
             position: relative;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
             animation: slideIn 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .item-card::before {
@@ -328,6 +351,10 @@
         .item-card.blue { background: #dfeeff; }
         .item-card.purple { background: #e9e1ff; }
 
+        .item-content {
+            flex: 1;
+        }
+
         .item-card h3 {
             font-size: 0.95rem;
             margin-bottom: 4px;
@@ -337,6 +364,26 @@
             font-size: 0.85rem;
             color: rgba(30, 33, 51, 0.8);
             margin: 2px 0;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: 8px;
+        }
+
+        .item-action-btn {
+            padding: 6px 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 6px;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .item-action-btn:hover {
+            background: rgba(0, 0, 0, 0.2);
         }
 
         .empty-state {
@@ -441,6 +488,84 @@
             font-weight: 600;
         }
 
+        .code-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 21, 32, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .code-modal.show {
+            display: flex;
+        }
+
+        .code-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 900px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .code-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .code-modal-header h2 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .code-container {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 16px;
+            overflow-x: auto;
+            margin-bottom: 16px;
+        }
+
+        .code-container code {
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            white-space: pre;
+            display: block;
+        }
+
+        .copy-code-btn {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .copy-code-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(124, 110, 243, 0.3);
+        }
+
+        .copy-code-btn.copied {
+            background: var(--success);
+        }
+
         @media (max-width: 1024px) {
             .container {
                 grid-template-columns: 1fr;
@@ -461,10 +586,12 @@
 
             .nav-buttons {
                 width: 100%;
+                flex-wrap: wrap;
             }
 
             .nav-buttons button {
                 flex: 1;
+                min-width: 100px;
             }
 
             .brand-text h1 {
@@ -476,15 +603,26 @@
             }
 
             .item-card {
-                padding: 10px;
+                flex-direction: column;
+                align-items: flex-start;
             }
 
-            .item-card h3 {
-                font-size: 0.9rem;
+            .item-actions {
+                margin-left: 0;
+                margin-top: 8px;
+                width: 100%;
+            }
+
+            .item-action-btn {
+                flex: 1;
             }
 
             .modal-content {
                 padding: 18px;
+            }
+
+            .code-modal-content {
+                max-height: 70vh;
             }
         }
 
@@ -537,6 +675,14 @@
                 padding: 16px;
                 max-width: 100%;
             }
+
+            .code-modal-content {
+                padding: 16px;
+            }
+
+            .code-container code {
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -553,6 +699,7 @@
             <div class="nav-buttons">
                 <button class="btn-secondary" onclick="switchView('chat')">💬 Chat</button>
                 <button class="btn-secondary" onclick="switchView('dashboard')">📊 Tableau</button>
+                <button class="copy-btn" onclick="openCodeModal()">📋 Copier le code</button>
             </div>
         </header>
 
@@ -662,6 +809,19 @@
         </div>
     </div>
 
+    <div id="codeModal" class="code-modal">
+        <div class="code-modal-content">
+            <div class="code-modal-header">
+                <h2>📋 Code HTML complet de LILOU</h2>
+                <button type="button" class="btn-cancel" onclick="closeCodeModal()" style="width: auto; margin: 0;">✕ Fermer</button>
+            </div>
+            <div class="code-container">
+                <code id="codeContent"></code>
+            </div>
+            <button type="button" class="copy-code-btn" id="copyCodeBtn" onclick="copyAllCode()">📋 Copier le code</button>
+        </div>
+    </div>
+
     <script>
         let data = {
             tasks: [],
@@ -672,7 +832,6 @@
         };
 
         let currentModalType = null;
-        let formInputs = {};
 
         function loadData() {
             const saved = localStorage.getItem('lilouData');
@@ -799,7 +958,6 @@
 
         function openModal(type) {
             currentModalType = type;
-            formInputs = {};
             const modal = document.getElementById('modal');
             const title = document.getElementById('modalTitle');
             const body = document.getElementById('modalBody');
@@ -963,6 +1121,23 @@
             closeModal();
         }
 
+        function deleteItem(type, id) {
+            if (type === 'task') data.tasks = data.tasks.filter(t => t.id !== id);
+            if (type === 'shopping') data.shopping = data.shopping.filter(s => s.id !== id);
+            if (type === 'note') data.notes = data.notes.filter(n => n.id !== id);
+            if (type === 'event') data.events = data.events.filter(e => e.id !== id);
+            if (type === 'reminder') data.reminders = data.reminders.filter(r => r.id !== id);
+            saveData();
+        }
+
+        function toggleTask(id) {
+            const task = data.tasks.find(t => t.id === id);
+            if (task) {
+                task.done = !task.done;
+                saveData();
+            }
+        }
+
         function renderItems(items, containerId, type) {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -975,44 +1150,81 @@
             container.innerHTML = items.map(item => {
                 let color = 'yellow';
                 let content = '';
+                let actions = '';
 
                 if (type === 'task') {
                     const colors = { high: 'red', medium: 'orange', low: 'yellow' };
                     color = colors[item.priority] || 'yellow';
+                    actions = `
+                        <div class="item-actions">
+                            <button class="item-action-btn" onclick="toggleTask(${item.id})">${item.done ? '↩️ Reouvrir' : '✅ Cocher'}</button>
+                            <button class="item-action-btn" onclick="deleteItem('task', ${item.id})">🗑️</button>
+                        </div>
+                    `;
                     content = `
-                        <h3>${escapeHtml(item.title)}</h3>
-                        <p>${item.done ? '✅ Terminée' : '⏳ En cours'}</p>
-                        ${item.dueDate ? `<p>📅 ${item.dueDate}</p>` : ''}
+                        <div class="item-content">
+                            <h3>${escapeHtml(item.title)}</h3>
+                            <p>${item.done ? '✅ Terminée' : '⏳ En cours'}</p>
+                            ${item.dueDate ? `<p>📅 ${item.dueDate}</p>` : ''}
+                        </div>
                     `;
                 } else if (type === 'shopping') {
                     color = item.bought ? 'green' : 'orange';
+                    actions = `
+                        <div class="item-actions">
+                            <button class="item-action-btn" onclick="deleteItem('shopping', ${item.id})">🗑️</button>
+                        </div>
+                    `;
                     content = `
-                        <h3>${escapeHtml(item.item)}</h3>
-                        <p>${item.bought ? '✅ Acheté' : '🛒 À acheter'}</p>
+                        <div class="item-content">
+                            <h3>${escapeHtml(item.item)}</h3>
+                            <p>${item.bought ? '✅ Acheté' : '🛒 À acheter'}</p>
+                        </div>
                     `;
                 } else if (type === 'note') {
                     color = 'yellow';
+                    actions = `
+                        <div class="item-actions">
+                            <button class="item-action-btn" onclick="deleteItem('note', ${item.id})">🗑️</button>
+                        </div>
+                    `;
                     content = `
-                        <h3>Note</h3>
-                        <p>${escapeHtml(item.text)}</p>
-                        <p style="font-size: 0.75rem; margin-top: 4px;">${item.date}</p>
+                        <div class="item-content">
+                            <h3>Note</h3>
+                            <p>${escapeHtml(item.text)}</p>
+                            <p style="font-size: 0.75rem; margin-top: 4px;">${item.date}</p>
+                        </div>
                     `;
                 } else if (type === 'event') {
                     color = 'blue';
+                    actions = `
+                        <div class="item-actions">
+                            <button class="item-action-btn" onclick="deleteItem('event', ${item.id})">🗑️</button>
+                        </div>
+                    `;
                     content = `
-                        <h3>${escapeHtml(item.title)}</h3>
-                        <p>📅 ${item.date} ${item.time ? item.time : ''}</p>
+                        <div class="item-content">
+                            <h3>${escapeHtml(item.title)}</h3>
+                            <p>📅 ${item.date} ${item.time ? item.time : ''}</p>
+                        </div>
                     `;
                 } else if (type === 'reminder') {
                     color = 'purple';
+                    actions = `
+                        <div class="item-actions">
+                            <button class="item-action-btn" onclick="deleteItem('reminder', ${item.id})">🗑️</button>
+                        </div>
+                    `;
                     content = `
-                        <h3>⏰ Rappel</h3>
-                        <p>${escapeHtml(item.text)}</p>
-                        <p>🕒 ${item.dateTime}</p>
+                        <div class="item-content">
+                            <h3>⏰ Rappel</h3>
+                            <p>${escapeHtml(item.text)}</p>
+                            <p>🕒 ${item.dateTime}</p>
+                        </div>
                     `;
                 }
 
-                return `<div class="item-card ${color}">${content}</div>`;
+                return `<div class="item-card ${color}">${content}${actions}</div>`;
             }).join('');
         }
 
@@ -1027,13 +1239,39 @@
             renderItems(data.reminders, 'remindersList', 'reminder');
         }
 
+        function openCodeModal() {
+            const codeModal = document.getElementById('codeModal');
+            const codeContent = document.getElementById('codeContent');
+            const htmlCode = document.documentElement.outerHTML;
+            codeContent.textContent = htmlCode;
+            codeModal.classList.add('show');
+        }
+
+        function closeCodeModal() {
+            document.getElementById('codeModal').classList.remove('show');
+        }
+
+        function copyAllCode() {
+            const htmlCode = document.documentElement.outerHTML;
+            navigator.clipboard.writeText(htmlCode).then(() => {
+                const btn = document.getElementById('copyCodeBtn');
+                btn.textContent = '✅ Code copié !';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copier le code';
+                    btn.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                alert('Erreur lors de la copie. Veuillez réessayer.');
+            });
+        }
+
         document.getElementById('chatInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
 
-        // Initialize
         loadData();
     </script>
 </body>
