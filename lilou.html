@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LILOU - Assistant IA Personnel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #7c6ef3;
+            --primary-dark: #5e49d9;
+            --secondary: #ff7ea8;
+            --success: #8bd7b0;
+            --warning: #ffd76b;
+            --danger: #ff8d8d;
+            --info: #8bb8ff;
+            --dark: #1e2133;
+            --light: #f5f7ff;
+            --muted: #66708a;
+            --border: rgba(124, 110, 243, 0.2);
+            --shadow: 0 20px 50px rgba(107, 92, 198, 0.15);
+        }
+
+        html, body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f3f5ff 0%, #eef9ff 100%);
+            color: var(--dark);
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 1.4rem;
+            box-shadow: 0 8px 16px rgba(124, 110, 243, 0.3);
+        }
+
+        .brand-text h1 {
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .brand-text p {
+            font-size: 0.65rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin: 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        nav button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 8px 16px rgba(124, 110, 243, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(124, 110, 243, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(124, 110, 243, 0.1);
+            color: var(--primary-dark);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(124, 110, 243, 0.15);
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            height: 100%;
+        }
+
+        /* Chat Panel */
+        .chat-section {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .chat-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(124, 110, 243, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #32d296;
+            box-shadow: 0 0 0 5px rgba(50, 210, 150, 0.12);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            display: flex;
+            gap: 8px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 12px 14px;
+            border-radius: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .message.bot .message-content {
+            background: rgba(124, 110, 243, 0.1);
+            color: var(--dark);
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .chat-input-area {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+            background: rgba(124, 110, 243, 0.02);
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            color: var(--dark);
+            font-size: 0.95rem;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .chat-input-area button {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input-area button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(124, 110, 243, 0.3);
+        }
+
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        .dashboard-section {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 16px;
+            box-shadow: var(--shadow);
+            min-height: 180px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .section-header h2 {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .add-btn {
+            padding: 8px 12px;
+            background: rgba(124, 110, 243, 0.1);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background: rgba(124, 110, 243, 0.2);
+        }
+
+        .items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .item-card {
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            animation: slideIn 0.3s ease;
+        }
+
+        .item-card::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            right: 16px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .item-card.red { background: #ffd7d7; }
+        .item-card.orange { background: #ffe4c4; }
+        .item-card.yellow { background: #fff3b3; }
+        .item-card.green { background: #d9f7e8; }
+        .item-card.blue { background: #dfeeff; }
+        .item-card.purple { background: #e9e1ff; }
+
+        .item-card h3 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .item-card p {
+            font-size: 0.85rem;
+            color: rgba(30, 33, 51, 0.8);
+            margin: 2px 0;
+        }
+
+        .empty-state {
+            padding: 20px;
+            text-align: center;
+            color: var(--muted);
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            background: rgba(124, 110, 243, 0.02);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 21, 32, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            margin-bottom: 18px;
+        }
+
+        .modal-header h2 {
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .modal-body {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 11px 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            background: rgba(124, 110, 243, 0.03);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            padding: 10px 16px;
+            background: rgba(124, 110, 243, 0.1);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-submit {
+            padding: 10px 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            main {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 12px;
+                align-items: flex-start;
+            }
+
+            .nav-buttons {
+                width: 100%;
+            }
+
+            .nav-buttons button {
+                flex: 1;
+            }
+
+            .brand-text h1 {
+                font-size: 1.2rem;
+            }
+
+            .dashboard-section {
+                min-height: 150px;
+            }
+
+            .item-card {
+                padding: 10px;
+            }
+
+            .item-card h3 {
+                font-size: 0.9rem;
+            }
+
+            .modal-content {
+                padding: 18px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            main {
+                padding: 12px;
+            }
+
+            header {
+                padding: 12px 16px;
+            }
+
+            .header-brand {
+                gap: 8px;
+            }
+
+            .logo {
+                width: 36px;
+                height: 36px;
+                font-size: 1.2rem;
+            }
+
+            .brand-text h1 {
+                font-size: 1.1rem;
+            }
+
+            .container {
+                gap: 12px;
+            }
+
+            .dashboard-section {
+                padding: 12px;
+                min-height: 130px;
+            }
+
+            .chat-messages {
+                padding: 12px;
+            }
+
+            .message-content {
+                max-width: 90%;
+            }
+
+            .chat-input-area {
+                padding: 12px;
+                gap: 8px;
+            }
+
+            .modal-content {
+                padding: 16px;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header>
+            <div class="header-brand">
+                <div class="logo">L</div>
+                <div class="brand-text">
+                    <p>Assistant IA</p>
+                    <h1>LILOU</h1>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="btn-secondary" onclick="switchView('chat')">💬 Chat</button>
+                <button class="btn-secondary" onclick="switchView('dashboard')">📊 Tableau</button>
+            </div>
+        </header>
+
+        <main>
+            <div id="chatView" class="container" style="display: grid; grid-template-columns: 1fr 1fr;">
+                <div class="chat-section">
+                    <div class="chat-header">
+                        <span class="status-dot"></span>
+                        Conversation avec LILOU
+                    </div>
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="message">
+                            <div class="message-content">
+                                Bonjour ! 👋 Je suis LILOU, ton assistant personnel. Je peux t'aider à gérer tes tâches, tes courses, tes notes, tes rappels et ton agenda. Que veux-tu que je fasse pour toi ?
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input id="chatInput" type="text" placeholder="Tape ta demande..." />
+                        <button onclick="sendMessage()">Envoyer</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-section" style="border-top: 4px solid var(--danger);">
+                        <div class="section-header">
+                            <h2>📋 Tâches</h2>
+                            <button class="add-btn" onclick="openModal('task')">+ Ajouter</button>
+                        </div>
+                        <div id="tasksList" class="items-list"></div>
+                    </div>
+
+                    <div class="dashboard-section" style="border-top: 4px solid var(--success);">
+                        <div class="section-header">
+                            <h2>🛒 Courses</h2>
+                            <button class="add-btn" onclick="openModal('shopping')">+ Ajouter</button>
+                        </div>
+                        <div id="shoppingList" class="items-list"></div>
+                    </div>
+
+                    <div class="dashboard-section" style="border-top: 4px solid var(--warning);">
+                        <div class="section-header">
+                            <h2>📝 Notes</h2>
+                            <button class="add-btn" onclick="openModal('note')">+ Ajouter</button>
+                        </div>
+                        <div id="notesList" class="items-list"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboardView" style="display: none;">
+                <div class="dashboard-grid">
+                    <div class="dashboard-section" style="border-top: 4px solid var(--danger);">
+                        <div class="section-header">
+                            <h2>📋 Tâches</h2>
+                            <button class="add-btn" onclick="openModal('task')">+ Ajouter</button>
+                        </div>
+                        <div id="tasksList2" class="items-list"></div>
+                    </div>
+
+                    <div class="dashboard-section" style="border-top: 4px solid var(--success);">
+                        <div class="section-header">
+                            <h2>🛒 Courses</h2>
+                            <button class="add-btn" onclick="openModal('shopping')">+ Ajouter</button>
+                        </div>
+                        <div id="shoppingList2" class="items-list"></div>
+                    </div>
+
+                    <div class="dashboard-section" style="border-top: 4px solid var(--warning);">
+                        <div class="section-header">
+                            <h2>📝 Notes</h2>
+                            <button class="add-btn" onclick="openModal('note')">+ Ajouter</button>
+                        </div>
+                        <div id="notesList2" class="items-list"></div>
+                    </div>
+
+                    <div class="dashboard-section" style="border-top: 4px solid var(--info);">
+                        <div class="section-header">
+                            <h2>📅 Agenda</h2>
+                            <button class="add-btn" onclick="openModal('event')">+ Ajouter</button>
+                        </div>
+                        <div id="eventsList" class="items-list"></div>
+                    </div>
+
+                    <div class="dashboard-section" style="border-top: 4px solid var(--primary);">
+                        <div class="section-header">
+                            <h2>⏰ Rappels</h2>
+                            <button class="add-btn" onclick="openModal('reminder')">+ Ajouter</button>
+                        </div>
+                        <div id="remindersList" class="items-list"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Ajouter</h2>
+            </div>
+            <form id="modalForm" onsubmit="submitForm(event)">
+                <div id="modalBody" class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Annuler</button>
+                    <button type="submit" class="btn-submit">Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let data = {
+            tasks: [],
+            shopping: [],
+            notes: [],
+            events: [],
+            reminders: []
+        };
+
+        let currentModalType = null;
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('lilouData');
+            if (saved) {
+                data = JSON.parse(saved);
+            }
+        }
+
+        // Save data to localStorage
+        function saveData() {
+            localStorage.setItem('lilouData', JSON.stringify(data));
+            refreshAllViews();
+        }
+
+        function switchView(view) {
+            const chatView = document.getElementById('chatView');
+            const dashboardView = document.getElementById('dashboardView');
+            
+            if (view === 'chat') {
+                chatView.style.display = 'grid';
+                dashboardView.style.display = 'none';
+            } else {
+                chatView.style.display = 'none';
+                dashboardView.style.display = 'grid';
+                refreshDashboard();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addMessageToChat(message, 'user');
+            input.value = '';
+
+            // Process command
+            const response = processCommand(message);
+            setTimeout(() => {
+                addMessageToChat(response, 'bot');
+            }, 300);
+        }
+
+        function addMessageToChat(text, sender) {
+            const messagesDiv = document.getElementById('chatMessages');
+            const messageEl = document.createElement('div');
+            messageEl.className = `message ${sender}`;
+            messageEl.innerHTML = `<div class="message-content">${escapeHtml(text)}</div>`;
+            messagesDiv.appendChild(messageEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function processCommand(input) {
+            const lower = input.toLowerCase();
+
+            if (lower.startsWith('ajoute tâche ')) {
+                const title = input.substring(13);
+                data.tasks.push({
+                    id: Date.now(),
+                    title: title,
+                    done: false,
+                    priority: 'medium',
+                    dueDate: null
+                });
+                saveData();
+                return `✅ J'ai ajouté la tâche: "${title}"`;
+            }
+
+            if (lower.startsWith('ajoute course ')) {
+                const item = input.substring(14);
+                data.shopping.push({
+                    id: Date.now(),
+                    item: item,
+                    bought: false
+                });
+                saveData();
+                return `✅ J'ai ajouté à tes courses: "${item}"`;
+            }
+
+            if (lower.startsWith('note ')) {
+                const text = input.substring(5);
+                data.notes.push({
+                    id: Date.now(),
+                    text: text,
+                    date: new Date().toLocaleDateString('fr-FR')
+                });
+                saveData();
+                return `📝 J'ai enregistré ta note: "${text}"`;
+            }
+
+            if (lower.includes('mes tâches') || lower.includes('liste tâches')) {
+                if (data.tasks.length === 0) return "📋 Tu n'as pas de tâches pour le moment.";
+                return `📋 Tâches: ${data.tasks.map(t => `• ${t.title} ${t.done ? '✅' : '⏳'}`).join(' ')}`;
+            }
+
+            if (lower.includes('mes courses') || lower.includes('liste courses')) {
+                if (data.shopping.length === 0) return "🛒 Ta liste de courses est vide.";
+                return `🛒 Courses: ${data.shopping.map(s => `• ${s.item} ${s.bought ? '✅' : '❌'}`).join(' ')}`;
+            }
+
+            if (lower.includes('mes notes')) {
+                if (data.notes.length === 0) return "📝 Tu n'as pas de notes.";
+                return `📝 Notes: ${data.notes.map(n => `• ${n.text}`).join(' ')}`;
+            }
+
+            if (lower.includes('aide') || lower.includes('help')) {
+                return `Voici ce que je peux faire:
+• "Ajoute tâche <titre>"
+• "Ajoute course <article>"
+• "Note <texte>"
+• "Mes tâches"
+• "Mes courses"
+• "Mes notes"`;
+            }
+
+            return "Je n'ai pas bien compris. Peux-tu essayer avec une formulation comme 'Ajoute tâche ...' ou 'Note ...' ?";
+        }
+
+        function openModal(type) {
+            currentModalType = type;
+            const modal = document.getElementById('modal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            const titles = {
+                task: 'Ajouter une tâche',
+                shopping: 'Ajouter une course',
+                note: 'Ajouter une note',
+                event: 'Ajouter un événement',
+                reminder: 'Ajouter un rappel'
+            };
+
+            title.textContent = titles[type];
+
+            let form = '';
+            if (type === 'task') {
+                form = `
+                    <div class="form-group">
+                        <label>Titre *</label>
+                        <input type="text" name="title" placeholder="Ex: Faire les courses" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Priorité</label>
+                        <select name="priority">
+                            <option value="low">Basse</option>
+                            <option value="medium" selected>Moyenne</option>
+                            <option value="high">Haute</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Date limite</label>
+                        <input type="date" name="dueDate">
+                    </div>
+                `;
+            } else if (type === 'shopping') {
+                form = `
+                    <div class="form-group">
+                        <label>Article *</label>
+                        <input type="text" name="item" placeholder="Ex: Lait" required>
+                    </div>
+                `;
+            } else if (type === 'note') {
+                form = `
+                    <div class="form-group">
+                        <label>Note *</label>
+                        <textarea name="text" placeholder="Ex: Appeler le médecin" required></textarea>
+                    </div>
+                `;
+            } else if (type === 'event') {
+                form = `
+                    <div class="form-group">
+                        <label>Titre *</label>
+                        <input type="text" name="title" placeholder="Ex: Rendez-vous" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date *</label>
+                        <input type="date" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Heure</label>
+                        <input type="time" name="time">
+                    </div>
+                `;
+            } else if (type === 'reminder') {
+                form = `
+                    <div class="form-group">
+                        <label>Texte du rappel *</label>
+                        <input type="text" name="text" placeholder="Ex: Payer facture" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Date et heure *</label>
+                        <input type="datetime-local" name="dateTime" required>
+                    </div>
+                `;
+            }
+
+            body.innerHTML = form;
+            modal.classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('show');
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+            const form = document.getElementById('modalForm');
+            const formData = new FormData(form);
+
+            if (currentModalType === 'task') {
+                data.tasks.push({
+                    id: Date.now(),
+                    title: formData.get('title'),
+                    done: false,
+                    priority: formData.get('priority'),
+                    dueDate: formData.get('dueDate')
+                });
+            } else if (currentModalType === 'shopping') {
+                data.shopping.push({
+                    id: Date.now(),
+                    item: formData.get('item'),
+                    bought: false
+                });
+            } else if (currentModalType === 'note') {
+                data.notes.push({
+                    id: Date.now(),
+                    text: formData.get('text'),
+                    date: new Date().toLocaleDateString('fr-FR')
+                });
+            } else if (currentModalType === 'event') {
+                data.events.push({
+                    id: Date.now(),
+                    title: formData.get('title'),
+                    date: formData.get('date'),
+                    time: formData.get('time')
+                });
+            } else if (currentModalType === 'reminder') {
+                data.reminders.push({
+                    id: Date.now(),
+                    text: formData.get('text'),
+                    dateTime: formData.get('dateTime')
+                });
+            }
+
+            saveData();
+            closeModal();
+            form.reset();
+        }
+
+        function renderItems(items, containerId, type) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (items.length === 0) {
+                container.innerHTML = '<div class="empty-state">Rien à afficher pour le moment</div>';
+                return;
+            }
+
+            container.innerHTML = items.map(item => {
+                let color = 'yellow';
+                let content = '';
+
+                if (type === 'task') {
+                    const colors = { high: 'red', medium: 'orange', low: 'yellow' };
+                    color = colors[item.priority] || 'yellow';
+                    content = `
+                        <h3>${item.title}</h3>
+                        <p>${item.done ? '✅ Terminée' : '⏳ En cours'}</p>
+                        ${item.dueDate ? `<p>📅 ${item.dueDate}</p>` : ''}
+                    `;
+                } else if (type === 'shopping') {
+                    color = item.bought ? 'green' : 'orange';
+                    content = `
+                        <h3>${item.item}</h3>
+                        <p>${item.bought ? '✅ Acheté' : '🛒 À acheter'}</p>
+                    `;
+                } else if (type === 'note') {
+                    color = 'yellow';
+                    content = `
+                        <h3>Note</h3>
+                        <p>${item.text}</p>
+                        <p style="font-size: 0.75rem; margin-top: 4px;">${item.date}</p>
+                    `;
+                } else if (type === 'event') {
+                    color = 'blue';
+                    content = `
+                        <h3>${item.title}</h3>
+                        <p>📅 ${item.date} ${item.time ? item.time : ''}</p>
+                    `;
+                } else if (type === 'reminder') {
+                    color = 'purple';
+                    content = `
+                        <h3>⏰ Rappel</h3>
+                        <p>${item.text}</p>
+                        <p style="font-size: 0.75rem;">${item.dateTime}</p>
+                    `;
+                }
+
+                return `<div class="item-card ${color}">${content}</div>`;
+            }).join('');
+        }
+
+        function refreshAllViews() {
+            renderItems(data.tasks, 'tasksList', 'task');
+            renderItems(data.shopping, 'shoppingList', 'shopping');
+            renderItems(data.notes, 'notesList', 'note');
+            renderItems(data.tasks, 'tasksList2', 'task');
+            renderItems(data.shopping, 'shoppingList2', 'shopping');
+            renderItems(data.notes, 'notesList2', 'note');
+            renderItems(data.events, 'eventsList', 'event');
+            renderItems(data.reminders, 'remindersList', 'reminder');
+        }
+
+        function refreshDashboard() {
+            renderItems(data.tasks, 'tasksList2', 'task');
+            renderItems(data.shopping, 'shoppingList2', 'shopping');
+            renderItems(data.notes, 'notesList2', 'note');
+            renderItems(data.events, 'eventsList', 'event');
+            renderItems(data.reminders, 'remindersList', 'reminder');
+        }
+
+        // Initialize
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        loadData();
+        refreshAllViews();
+    </script>
+</body>
+</html>
